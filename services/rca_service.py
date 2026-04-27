@@ -15,15 +15,21 @@ class RCAService:
         # Broad query (no city/store filter) → city-level summary to avoid token bloat
         if not city and not store:
             from collections import defaultdict
-            by_city: dict = defaultdict(lambda: {"total": 0, "pileup": 0, "sustained_stores": set()})
+            by_city: dict = defaultdict(lambda: {"total": 0, "stores": set(), "pileup": 0})
             for r in rows:
                 by_city[r.city]["total"] += 1
+                by_city[r.city]["stores"].add(r.store)
                 if r.pileup_flag:
                     by_city[r.city]["pileup"] += 1
-            lines = [f"Found **{len(rows)}** problem hours across **{len(by_city)}** cities:\n"]
+
+            total_stores = sum(len(s["stores"]) for s in by_city.values())
+            lines = [
+                f"Found **{total_stores} stores** with problem hours across **{len(by_city)} cities** on 2026-04-22:\n"
+            ]
             for city_name, stats in sorted(by_city.items()):
                 lines.append(
-                    f"- **{city_name}**: {stats['total']} problem hours, "
+                    f"- **{city_name}**: {len(stats['stores'])} stores affected, "
+                    f"{stats['total']} problem hours, "
                     f"{stats['pileup']} with pileup"
                 )
             lines.append("\nUse get_problem_hours with a specific city to see store-level detail.")
