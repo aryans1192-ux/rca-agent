@@ -1,0 +1,12 @@
+langgraph
+langchain-groq
+langchain-mcp-adapters
+duckdb
+fastapi
+uvicorn
+streamlit
+pandas
+python-dotenv
+mcp
+fastmcp
+requests
