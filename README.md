@@ -410,7 +410,7 @@ def _trim(messages: list) -> list:
 ## Setup
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.10 or higher (3.11 recommended)
 - A [Groq](https://console.groq.com) API key (free tier)
 
 ### Install
