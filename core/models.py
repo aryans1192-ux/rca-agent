@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class OrderRow(BaseModel):
@@ -9,6 +9,13 @@ class OrderRow(BaseModel):
     @classmethod
     def coerce_date(cls, v):
         return v.isoformat() if hasattr(v, "isoformat") else str(v)
+
+    @model_validator(mode="before")
+    @classmethod
+    def replace_none_with_zero(cls, values):
+        if isinstance(values, dict):
+            return {k: (0 if v is None else v) for k, v in values.items()}
+        return values
 
     store: str
     city: str
